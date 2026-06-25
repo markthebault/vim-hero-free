@@ -19,6 +19,8 @@
         --good: #77d18a;
         --bad: #ff7a7a;
         --mark: #314f6d;
+        --target: #2bd889;
+        --edit-target: #a84242;
       }
 
       * { box-sizing: border-box; }
@@ -161,7 +163,36 @@
       }
 
       .tutorial-body {
+        position: relative;
         padding: 12px 14px 14px;
+      }
+
+      .demo-key {
+        position: absolute;
+        top: 22px;
+        right: 28px;
+        z-index: 2;
+        min-width: 86px;
+        padding: 10px 18px;
+        border: 2px solid #51657d;
+        border-bottom-width: 4px;
+        border-radius: 8px;
+        background: #2d3b4b;
+        color: #fff;
+        text-align: center;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: clamp(2rem, 5vw, 4rem);
+        line-height: 1;
+        box-shadow: 0 12px 32px rgb(0 0 0 / 28%);
+        opacity: 0;
+        transform: translateY(-4px) scale(.96);
+        transition: opacity .12s ease, transform .12s ease;
+        pointer-events: none;
+      }
+
+      .demo-key.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
       }
 
       kbd {
@@ -184,21 +215,126 @@
       }
 
       .editor-wrap {
+        position: relative;
         border: 1px solid var(--line);
         border-radius: 8px;
         overflow: hidden;
         background: #0b0d0c;
       }
 
+      .tabs {
+        display: flex;
+        gap: 6px;
+        padding: 10px 12px 0;
+        background: var(--panel);
+      }
+
+      .tab {
+        min-height: 30px;
+        padding: 4px 10px;
+        border: 0;
+        border-radius: 5px 5px 0 0;
+        background: transparent;
+        color: var(--muted);
+      }
+
+      .tab.active {
+        color: var(--text);
+        background: #0b0d0c;
+      }
+
       .status {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        flex-wrap: wrap;
         gap: 12px;
         min-height: 42px;
         padding: 8px 12px;
         background: var(--panel);
         border-bottom: 1px solid var(--line);
+      }
+
+      .status .target-text {
+        flex: 1 1 240px;
+        min-width: 0;
+        color: var(--text);
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .stat {
+        color: var(--muted);
+        font-size: .9rem;
+        white-space: nowrap;
+      }
+
+      .practice-tip {
+        position: absolute;
+        top: 86px;
+        right: 22px;
+        z-index: 4;
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--target);
+        border-radius: 4px;
+        background: #101712;
+        color: var(--target);
+        font: 800 1.25rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        cursor: help;
+        box-shadow: 0 0 0 4px rgb(43 216 137 / 10%);
+      }
+
+      .practice-tip::after {
+        content: attr(data-tip);
+        position: absolute;
+        top: 46px;
+        right: 0;
+        width: min(320px, 70vw);
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #101210;
+        color: var(--text);
+        font: .9rem/1.4 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        text-align: left;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-4px);
+        transition: opacity .12s ease, transform .12s ease;
+      }
+
+      .practice-tip:hover::after,
+      .practice-tip:focus-visible::after {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .visual-guide {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: visible;
+      }
+
+      .visual-guide line {
+        stroke: var(--target);
+        stroke-width: 3;
+        stroke-dasharray: 7 7;
+      }
+
+      .visual-guide rect {
+        fill: #101712;
+        stroke: var(--target);
+        stroke-width: 2;
+        rx: 4;
+      }
+
+      .visual-guide text {
+        fill: var(--target);
+        font: 800 18px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       }
 
       .editor {
@@ -224,6 +360,34 @@
 
       .tutorial .CodeMirror-cursor {
         border-left: 2px solid var(--accent);
+      }
+
+      .cm-target {
+        background: var(--target);
+        color: #05140d;
+        border-radius: 2px;
+      }
+
+      .cm-edit-target {
+        background: color-mix(in srgb, var(--edit-target) 72%, transparent);
+        color: #fff;
+        border-radius: 2px;
+      }
+
+      .cm-insert-target {
+        display: inline-block;
+        width: 0;
+        height: 1.25em;
+        border-left: 3px solid var(--target);
+        box-shadow: 0 0 0 4px rgb(43 216 137 / 12%);
+        vertical-align: text-bottom;
+      }
+
+      .target-bookmark {
+        display: inline-block;
+        width: .62em;
+        min-height: 1.25em;
+        vertical-align: text-bottom;
       }
 
       .toast {
@@ -252,6 +416,11 @@
       }
 
       .action:hover { border-color: var(--accent); }
+
+      .compact {
+        min-height: 30px;
+        padding: 4px 10px;
+      }
 
       @media (max-width: 820px) {
         .app { grid-template-columns: 1fr; }
@@ -283,6 +452,7 @@
               <button id="play-demo" class="action" type="button">Play</button>
             </div>
             <div class="tutorial-body">
+              <div id="demo-key" class="demo-key" aria-hidden="true"></div>
               <textarea id="demo-editor" aria-label="Tutorial example"></textarea>
             </div>
           </div>
@@ -290,17 +460,28 @@
 
         <section class="stage">
           <div class="editor-wrap">
+            <div class="tabs" aria-label="Practice views">
+              <button class="tab active" type="button">Challenge</button>
+              <button class="tab" type="button">Stats</button>
+              <button class="tab" type="button">Settings</button>
+            </div>
             <div class="status">
               <strong id="mode">NORMAL</strong>
-              <span id="target" class="muted"></span>
+              <span id="target" class="muted target-text"></span>
+              <span id="goal-count" class="stat">0 / 0 goals</span>
+              <span id="timer" class="stat">00:00</span>
+              <span id="accuracy" class="stat">100% accuracy</span>
+              <span id="speed" class="stat">0.0 goals/min</span>
+              <button id="reset" class="action compact" type="button">restart</button>
             </div>
+            <button class="practice-tip" type="button" aria-label="Practice help" data-tip="Reach or edit the green highlight using this lesson's Vim motions. Avoid mouse clicks and unrelated keys; they lower accuracy. The cursor will not move for you.">!</button>
+            <svg id="visual-guide" class="visual-guide" aria-hidden="true"></svg>
             <textarea id="editor" class="editor" aria-label="Vim practice editor"></textarea>
           </div>
           <div id="toast" class="toast muted" aria-live="polite"></div>
         </section>
 
         <footer>
-          <button id="reset" class="action" type="button">Restart lesson</button>
           <button id="next" class="action" type="button">Next</button>
         </footer>
       </main>
@@ -312,6 +493,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/keymap/vim.min.js"></script>
-    <script type="module" src="./src/app.js"></script>
+    <script type="module" src="./src/app.js?v=visual-guide-2"></script>
   </body>
 </html>
