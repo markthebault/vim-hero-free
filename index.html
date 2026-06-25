@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vim Practice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/dialog/dialog.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/theme/material-darker.min.css">
     <style>
       :root {
         color-scheme: dark;
@@ -29,7 +32,7 @@
       .app {
         min-height: 100vh;
         display: grid;
-        grid-template-columns: minmax(220px, 300px) 1fr;
+        grid-template-columns: minmax(286px, 390px) 1fr;
       }
 
       aside {
@@ -54,9 +57,10 @@
 
       nav { padding: 12px; }
       .group-title {
-        margin: 18px 8px 6px;
-        color: var(--muted);
-        font-size: .75rem;
+        margin: 22px 8px 8px;
+        color: #34d0c3;
+        font-size: .9rem;
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: .08em;
       }
@@ -68,17 +72,46 @@
 
       .lesson-btn {
         width: 100%;
-        min-height: 38px;
+        min-height: 48px;
         padding: 8px 10px;
         border: 0;
         border-radius: 6px;
         background: transparent;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
         text-align: left;
         cursor: pointer;
       }
 
       .lesson-btn:hover, .lesson-btn.active { background: var(--panel); }
       .lesson-btn.done { color: var(--good); }
+      .lesson-name {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .lesson-keys {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 6px;
+        max-width: 124px;
+      }
+
+      .mini-kbd {
+        min-width: 32px;
+        min-height: 30px;
+        padding: 3px 8px;
+        border: 1px solid #51657d;
+        border-bottom-width: 2px;
+        border-radius: 7px;
+        background: #2d3b4b;
+        color: #fff;
+        text-align: center;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: .9rem;
+      }
 
       main {
         display: grid;
@@ -96,6 +129,39 @@
         flex-wrap: wrap;
         gap: 8px;
         margin-top: 14px;
+      }
+
+      .tutorial {
+        margin-top: 22px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #1b201d;
+      }
+
+      .tutorial-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .tutorial-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .tutorial-title strong {
+        overflow-wrap: anywhere;
+      }
+
+      .tutorial-body {
+        padding: 12px 14px 14px;
       }
 
       kbd {
@@ -136,38 +202,28 @@
       }
 
       .editor {
-        padding: 16px 0;
         overflow: auto;
-        outline: 0;
+      }
+
+      .CodeMirror {
+        height: min(58vh, 560px);
+        min-height: 360px;
         font: 16px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        tab-size: 2;
+        background: #0b0d0c;
       }
 
-      .row {
-        display: grid;
-        grid-template-columns: 44px max-content;
-        min-height: 26px;
+      .CodeMirror-gutters {
+        background: #0b0d0c;
+        border-right-color: var(--line);
       }
 
-      .ln {
-        padding-right: 10px;
-        color: #6f786f;
-        text-align: right;
-        user-select: none;
+      .tutorial .CodeMirror {
+        height: 210px;
+        min-height: 210px;
       }
 
-      .code {
-        white-space: pre;
-        padding-right: 28px;
-      }
-
-      .cursor {
-        background: var(--accent);
-        color: #17130a;
-      }
-
-      .visual {
-        background: var(--mark);
+      .tutorial .CodeMirror-cursor {
+        border-left: 2px solid var(--accent);
       }
 
       .toast {
@@ -218,6 +274,18 @@
           <h2 id="title"></h2>
           <p id="summary" class="muted"></p>
           <div id="commands" class="commands"></div>
+          <div class="tutorial">
+            <div class="tutorial-head">
+              <div class="tutorial-title">
+                <strong id="tutorial-title"></strong>
+                <span id="tutorial-status" class="muted small">paused</span>
+              </div>
+              <button id="play-demo" class="action" type="button">Play</button>
+            </div>
+            <div class="tutorial-body">
+              <textarea id="demo-editor" aria-label="Tutorial example"></textarea>
+            </div>
+          </div>
         </section>
 
         <section class="stage">
@@ -226,7 +294,7 @@
               <strong id="mode">NORMAL</strong>
               <span id="target" class="muted"></span>
             </div>
-            <div id="editor" class="editor" tabindex="0" role="application" aria-label="Vim practice editor"></div>
+            <textarea id="editor" class="editor" aria-label="Vim practice editor"></textarea>
           </div>
           <div id="toast" class="toast muted" aria-live="polite"></div>
         </section>
@@ -238,6 +306,12 @@
       </main>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/dialog/dialog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/keymap/vim.min.js"></script>
     <script type="module" src="./src/app.js"></script>
   </body>
 </html>

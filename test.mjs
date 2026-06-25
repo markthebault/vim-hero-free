@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { applyCommand, createState, feed, lessons, wanted } from "./src/app.js";
+import { createState, demoTokens, lessons, normalizeVimKey, tokens, toVimKey, track, wanted } from "./src/app.js";
 
 globalThis.localStorage = {
   getItem: () => "[]",
@@ -11,7 +11,7 @@ function runLesson(title) {
   assert.notEqual(index, -1);
   const state = createState(index);
   while (state.step < lessons[index].keys.length) {
-    for (const key of wanted(state).match(/Ctrl\+[a-z]|Esc|./g)) feed(state, key);
+    for (const key of tokens(wanted(state))) track(state, key);
   }
   assert.equal(state.message, "Lesson complete.");
 }
@@ -23,9 +23,12 @@ runLesson("Delete Words");
 runLesson("Switch Selection Ends");
 
 const state = createState(1);
-applyCommand(state, "l");
-assert.equal(state.col, 1);
-applyCommand(state, "j");
-assert.equal(state.row, 1);
+track(state, "x");
+assert.equal(state.step, 0);
+track(state, "h");
+assert.equal(state.step, 1);
+assert.equal(normalizeVimKey("<C-D>"), "Ctrl+d");
+assert.equal(toVimKey("Ctrl+d"), "<C-d>");
+assert.deepEqual(demoTokens(lessons.find(lesson => lesson.title === "Intro to modes")), ["i", "d", "e", "m", "o", "Esc"]);
 
 console.log("ok");
