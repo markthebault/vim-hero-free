@@ -255,11 +255,20 @@
       }
 
       .status .target-text {
-        flex: 1 1 240px;
+        flex: 1 0 100%;
+        order: 2;
         min-width: 0;
         color: var(--text);
         font-weight: 700;
         overflow-wrap: anywhere;
+      }
+
+      .status .stat {
+        order: 3;
+      }
+
+      #mode {
+        order: 1;
       }
 
       .stat {
@@ -323,18 +332,6 @@
         stroke: var(--target);
         stroke-width: 3;
         stroke-dasharray: 7 7;
-      }
-
-      .visual-guide rect {
-        fill: #101712;
-        stroke: var(--target);
-        stroke-width: 2;
-        rx: 4;
-      }
-
-      .visual-guide text {
-        fill: var(--target);
-        font: 800 18px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       }
 
       .editor {

@@ -36,14 +36,14 @@ second paragraph line two
 third paragraph line one
 third paragraph line two`;
 
-const openSample = `colors:
-  blue
+const openSample = `settings:
+  retries: 3
 
-shapes:
-  square
+services:
+  api: enabled
 
-tools:
-  hammer`;
+alerts:
+  email: true`;
 
 const visualSample = `const alpha = "ready";
 const beta = "draft";
@@ -274,55 +274,55 @@ const introGoals = [
 ];
 
 const insertGoals = [
-  documentGoal(pos(editSample, "guest"), { includes: ["\"new guest\""], insertText: "new ", range: range(editSample, "guest"), mode: "NORMAL" }, "Insert new before the highlighted word."),
-  documentGoal(pos(editSample, "draft"), { includes: ["\"draft-ready\""], insertText: "-ready", range: range(editSample, "draft"), mode: "NORMAL" }, "Append -ready after the highlighted word."),
-  documentGoal(pos(editSample, "count"), { includes: ["let const count"], insertText: "let ", range: range(editSample, "count"), mode: "NORMAL" }, "Insert text before this word."),
-  documentGoal(pos(editSample, "render"), { includes: ["renderNow"], insertText: "Now", range: range(editSample, "render"), mode: "NORMAL" }, "Append text to the call name."),
-  documentGoal(pos(editSample, "status"), { includes: ["current_status"], insertText: "current_", range: range(editSample, "status"), mode: "NORMAL" }, "Insert a prefix."),
-  documentGoal(pos(editSample, "3"), { includes: ["30"], insertText: "0", range: range(editSample, "3"), mode: "NORMAL" }, "Append one digit."),
-  documentGoal(pos(editSample, "username", 1), { includes: ["activeUsername"], insertText: "active", range: range(editSample, "username", 1), mode: "NORMAL" }, "Insert text at the target."),
-  documentGoal(pos(editSample, "count", 1), { includes: ["countValue"], insertText: "Value", range: range(editSample, "count", 1), mode: "NORMAL" }, "Append text at the target."),
-  documentGoal(pos(editSample, "guest"), { includes: ["guest user"], insertText: " user", range: range(editSample, "guest"), mode: "NORMAL" }, "Append inside the string."),
-  documentGoal(pos(editSample, "draft"), { includes: ["final draft"], insertText: "final ", range: range(editSample, "draft"), mode: "NORMAL" }, "Insert inside the string."),
+  documentGoal(pos(editSample, "guest"), { includes: ["\"demo-guest\""], insertText: "demo-", range: range(editSample, "guest"), mode: "NORMAL" }, "Add the demo- prefix inside the username string."),
+  documentGoal(pos(editSample, "draft"), { includes: ["\"draft-ready\""], insertText: "-ready", range: range(editSample, "draft"), mode: "NORMAL" }, "Mark the draft status as ready."),
+  documentGoal(pos(editSample, "count"), { includes: ["const total_count"], insertText: "total_", range: range(editSample, "count"), mode: "NORMAL" }, "Rename count by adding the total_ prefix."),
+  documentGoal(pos(editSample, "render"), { includes: ["renderNow"], insertText: "Now", range: range(editSample, "render"), mode: "NORMAL" }, "Turn the render call into renderNow."),
+  documentGoal(pos(editSample, "status"), { includes: ["const current_status"], insertText: "current_", range: range(editSample, "status"), mode: "NORMAL" }, "Rename status by adding current_."),
+  documentGoal(pos(editSample, "3"), { includes: ["30"], insertText: "0", range: range(editSample, "3"), mode: "NORMAL" }, "Change the retry count from 3 to 30."),
+  documentGoal(pos(editSample, "username", 1), { includes: ["activeUsername"], insertText: "active", range: range(editSample, "username", 1), mode: "NORMAL" }, "Pass activeUsername to render."),
+  documentGoal(pos(editSample, "count", 1), { includes: ["countValue"], insertText: "Value", range: range(editSample, "count", 1), mode: "NORMAL" }, "Pass countValue to render."),
+  documentGoal(pos(editSample, "guest"), { includes: ["guest user"], insertText: " user", range: range(editSample, "guest"), mode: "NORMAL" }, "Expand the username string to guest user."),
+  documentGoal(pos(editSample, "draft"), { includes: ["final draft"], insertText: "final ", range: range(editSample, "draft"), mode: "NORMAL" }, "Make the status string final draft."),
 ];
 
 const lineInsertGoals = [
-  documentGoal(p(0, 8), { includes: ["let const username"], insertText: "let ", range: { from: p(0, 0), to: p(0, 5) }, mode: "NORMAL" }, "Insert at the start of the line."),
-  documentGoal(p(0, 8), { includes: ["\"guest\"; // active"], insertText: " // active", range: { from: p(0, 23), to: p(0, 24) }, mode: "NORMAL" }, "Append at the end of the line."),
-  documentGoal(p(1, 8), { includes: ["let const status"], insertText: "let ", range: { from: p(1, 0), to: p(1, 5) }, mode: "NORMAL" }, "Insert at line start."),
-  documentGoal(p(1, 8), { includes: ["\"draft\"; // saved"], insertText: " // saved", range: { from: p(1, 22), to: p(1, 23) }, mode: "NORMAL" }, "Append at line end."),
-  documentGoal(p(2, 8), { includes: ["let const count"], insertText: "let ", range: { from: p(2, 0), to: p(2, 5) }, mode: "NORMAL" }, "Insert at line start."),
-  documentGoal(p(2, 8), { includes: ["3; // total"], insertText: " // total", range: { from: p(2, 15), to: p(2, 16) }, mode: "NORMAL" }, "Append at line end."),
-  documentGoal(p(4, 8), { includes: ["return render"], insertText: "return ", range: { from: p(4, 0), to: p(4, 6) }, mode: "NORMAL" }, "Insert before the call."),
-  documentGoal(p(4, 8), { includes: ["count); // done"], insertText: " // done", range: { from: p(4, 30), to: p(4, 31) }, mode: "NORMAL" }, "Append after the call."),
-  documentGoal(p(0, 8), { includes: ["export const username"], insertText: "export ", range: { from: p(0, 0), to: p(0, 5) }, mode: "NORMAL" }, "Insert at the front."),
-  documentGoal(p(1, 8), { includes: ["\"draft\"; // review"], insertText: " // review", range: { from: p(1, 22), to: p(1, 23) }, mode: "NORMAL" }, "Finish at the line end."),
+  documentGoal(p(0, 8), { includes: ["export const username"], insertText: "export ", range: { from: p(0, 0), to: p(0, 5) }, mode: "NORMAL" }, "Export the username constant."),
+  documentGoal(p(0, 8), { includes: ["\"guest\"; // default user"], insertText: " // default user", range: { from: p(0, 23), to: p(0, 24) }, mode: "NORMAL" }, "Comment why username defaults to guest."),
+  documentGoal(p(1, 8), { includes: ["export const status"], insertText: "export ", range: { from: p(1, 0), to: p(1, 5) }, mode: "NORMAL" }, "Export the status constant."),
+  documentGoal(p(1, 8), { includes: ["\"draft\"; // pending review"], insertText: " // pending review", range: { from: p(1, 22), to: p(1, 23) }, mode: "NORMAL" }, "Add the pending review comment."),
+  documentGoal(p(2, 8), { includes: ["export const count"], insertText: "export ", range: { from: p(2, 0), to: p(2, 5) }, mode: "NORMAL" }, "Export the count constant."),
+  documentGoal(p(2, 8), { includes: ["3; // max retries"], insertText: " // max retries", range: { from: p(2, 15), to: p(2, 16) }, mode: "NORMAL" }, "Document count as max retries."),
+  documentGoal(p(4, 8), { includes: ["return render"], insertText: "return ", range: { from: p(4, 0), to: p(4, 6) }, mode: "NORMAL" }, "Return the render result."),
+  documentGoal(p(4, 8), { includes: ["count); // hydrate view"], insertText: " // hydrate view", range: { from: p(4, 30), to: p(4, 31) }, mode: "NORMAL" }, "Comment the render call."),
+  documentGoal(p(0, 8), { includes: ["const username = \"guest\"; // TODO rename"], insertText: " // TODO rename", range: { from: p(0, 23), to: p(0, 24) }, mode: "NORMAL" }, "Add a TODO at the end of username."),
+  documentGoal(p(1, 8), { includes: ["export const status"], insertText: "export ", range: { from: p(1, 0), to: p(1, 5) }, mode: "NORMAL" }, "Export the status constant."),
 ];
 
 const openGoals = [
-  documentGoal(p(0, 0), { includes: ["colors:\n  teal"], insertText: "  teal", range: { from: p(0, 0), to: p(0, 7) }, mode: "NORMAL" }, "Open a line below and insert the text.", openSample),
-  documentGoal(p(1, 2), { includes: ["  cyan\n  blue"], insertText: "  cyan", range: { from: p(1, 0), to: p(1, 6) }, mode: "NORMAL" }, "Open a line above and insert the text.", openSample),
-  documentGoal(p(3, 0), { includes: ["shapes:\n  circle"], insertText: "  circle", range: { from: p(3, 0), to: p(3, 7) }, mode: "NORMAL" }, "Open below this section.", openSample),
-  documentGoal(p(4, 2), { includes: ["  triangle\n  square"], insertText: "  triangle", range: { from: p(4, 0), to: p(4, 8) }, mode: "NORMAL" }, "Open above this item.", openSample),
-  documentGoal(p(6, 0), { includes: ["tools:\n  saw"], insertText: "  saw", range: { from: p(6, 0), to: p(6, 6) }, mode: "NORMAL" }, "Open below the section.", openSample),
-  documentGoal(p(7, 2), { includes: ["  drill\n  hammer"], insertText: "  drill", range: { from: p(7, 0), to: p(7, 8) }, mode: "NORMAL" }, "Open above the item.", openSample),
-  documentGoal(p(0, 0), { includes: ["colors:\n  amber"], insertText: "  amber", range: { from: p(0, 0), to: p(0, 7) }, mode: "NORMAL" }, "Open below and type.", openSample),
-  documentGoal(p(4, 2), { includes: ["  hexagon\n  square"], insertText: "  hexagon", range: { from: p(4, 0), to: p(4, 8) }, mode: "NORMAL" }, "Open above and type.", openSample),
-  documentGoal(p(6, 0), { includes: ["tools:\n  level"], insertText: "  level", range: { from: p(6, 0), to: p(6, 6) }, mode: "NORMAL" }, "Open below and type.", openSample),
-  documentGoal(p(1, 2), { includes: ["  navy\n  blue"], insertText: "  navy", range: { from: p(1, 0), to: p(1, 6) }, mode: "NORMAL" }, "Open above and finish.", openSample),
+  documentGoal(p(0, 0), { includes: ["settings:\n  timeout: 30"], insertText: "  timeout: 30", range: { from: p(0, 0), to: p(0, 9) }, mode: "NORMAL" }, "Add timeout under settings.", openSample),
+  documentGoal(p(1, 2), { includes: ["  owner: platform\n  retries: 3"], insertText: "  owner: platform", range: { from: p(1, 0), to: p(1, 12) }, mode: "NORMAL" }, "Add owner above retries.", openSample),
+  documentGoal(p(3, 0), { includes: ["services:\n  worker: enabled"], insertText: "  worker: enabled", range: { from: p(3, 0), to: p(3, 9) }, mode: "NORMAL" }, "Add worker under services.", openSample),
+  documentGoal(p(4, 2), { includes: ["  web: enabled\n  api: enabled"], insertText: "  web: enabled", range: { from: p(4, 0), to: p(4, 14) }, mode: "NORMAL" }, "Add web above api.", openSample),
+  documentGoal(p(6, 0), { includes: ["alerts:\n  sms: false"], insertText: "  sms: false", range: { from: p(6, 0), to: p(6, 7) }, mode: "NORMAL" }, "Add sms under alerts.", openSample),
+  documentGoal(p(7, 2), { includes: ["  slack: true\n  email: true"], insertText: "  slack: true", range: { from: p(7, 0), to: p(7, 13) }, mode: "NORMAL" }, "Add slack above email.", openSample),
+  documentGoal(p(0, 0), { includes: ["settings:\n  cache: true"], insertText: "  cache: true", range: { from: p(0, 0), to: p(0, 9) }, mode: "NORMAL" }, "Add cache under settings.", openSample),
+  documentGoal(p(4, 2), { includes: ["  jobs: enabled\n  api: enabled"], insertText: "  jobs: enabled", range: { from: p(4, 0), to: p(4, 14) }, mode: "NORMAL" }, "Add jobs above api.", openSample),
+  documentGoal(p(6, 0), { includes: ["alerts:\n  pager: false"], insertText: "  pager: false", range: { from: p(6, 0), to: p(6, 7) }, mode: "NORMAL" }, "Add pager under alerts.", openSample),
+  documentGoal(p(1, 2), { includes: ["  region: eu\n  retries: 3"], insertText: "  region: eu", range: { from: p(1, 0), to: p(1, 12) }, mode: "NORMAL" }, "Add region above retries.", openSample),
 ];
 
 const smallEditGoals = [
-  documentGoal(pos(editSample, "guest"), { excludes: ["guest"], includes: ["user"], insertText: "user", range: range(editSample, "guest"), mode: "NORMAL" }, "Substitute this word."),
-  documentGoal(pos(editSample, "draft"), { excludes: ["draft"], range: range(editSample, "draft") }, "Delete the highlighted character or word."),
-  documentGoal(pos(editSample, "3"), { excludes: ["3"], includes: ["7"], range: range(editSample, "3") }, "Replace 3 with 7."),
-  documentGoal(pos(editSample, "username"), { excludes: ["username"], includes: ["name"], insertText: "name", range: range(editSample, "username"), mode: "NORMAL" }, "Substitute the target."),
-  documentGoal(pos(editSample, "status"), { excludes: ["status"], range: range(editSample, "status") }, "Delete this target."),
-  documentGoal(pos(editSample, "count"), { excludes: ["count"], includes: ["total"], insertText: "total", range: range(editSample, "count"), mode: "NORMAL" }, "Substitute the target."),
-  documentGoal(pos(editSample, "render"), { excludes: ["render"], includes: ["paint"], insertText: "paint", range: range(editSample, "render"), mode: "NORMAL" }, "Substitute this word."),
-  documentGoal(pos(editSample, "guest"), { excludes: ["guest"], includes: ["Guest"], range: range(editSample, "guest") }, "Replace the first letter."),
-  documentGoal(pos(editSample, "draft"), { excludes: ["draft"], includes: ["ready"], insertText: "ready", range: range(editSample, "draft"), mode: "NORMAL" }, "Substitute this value."),
-  documentGoal(pos(editSample, "count", 1), { excludes: ["count"], range: range(editSample, "count", 1) }, "Delete the target."),
+  documentGoal(p(0, 1), { excludes: ["cnost"], includes: ["const var temperature = 5;"], insertText: "n", range: { from: p(0, 1), to: p(0, 2) }, mode: "NORMAL" }, "Fix cnost to const: delete the misplaced n, then insert n after o.", "cnost var temperature = 5;", ["x", "a", "n", "Esc"]),
+  documentGoal(p(0, 3), { excludes: ["retrun"], includes: ["return formatName(user);"], insertText: "r", range: { from: p(0, 3), to: p(0, 4) }, mode: "NORMAL" }, "Fix retrun to return: delete the misplaced r, then insert r after u.", "retrun formatName(user);", ["x", "a", "r", "Esc"]),
+  documentGoal(p(0, 10), { excludes: ["colour"], includes: ["const color = \"blue\";"], range: { from: p(0, 10), to: p(0, 11) } }, "Fix colour to color by deleting u.", "const colour = \"blue\";", ["x"]),
+  documentGoal(p(0, 17), { excludes: ["1;"], includes: ["const maxItems = 5;"], range: { from: p(0, 17), to: p(0, 18) } }, "Change maxItems from 1 to 5.", "const maxItems = 1;", ["r", "5"]),
+  documentGoal(p(0, 17), { excludes: ["prodction"], includes: ["const env = \"production\";"], insertText: "uc", range: { from: p(0, 17), to: p(0, 18) }, mode: "NORMAL" }, "Fix prodction to production by substituting c with uc.", "const env = \"prodction\";", ["s", "u", "c", "Esc"]),
+  documentGoal(p(0, 10), { excludes: ["portt"], includes: ["const port = 3000;"], range: { from: p(0, 10), to: p(0, 11) } }, "Fix portt to port by deleting the extra t.", "const portt = 3000;", ["x"]),
+  documentGoal(p(0, 17), { excludes: ["eror"], includes: ["const level = \"error\";"], insertText: "ro", range: { from: p(0, 17), to: p(0, 18) }, mode: "NORMAL" }, "Fix eror to error by substituting o with ro.", "const level = \"eror\";", ["s", "r", "o", "Esc"]),
+  documentGoal(p(0, 9), { excludes: ["lgo"], includes: ["console.log(total);"], insertText: "g", range: { from: p(0, 9), to: p(0, 10) }, mode: "NORMAL" }, "Fix lgo to log: delete g, then insert g after o.", "console.lgo(total);", ["x", "a", "g", "Esc"]),
+  documentGoal(p(0, 19), { excludes: ["recive"], includes: ["const action = \"receive\";"], insertText: "ei", range: { from: p(0, 19), to: p(0, 20) }, mode: "NORMAL" }, "Fix recive to receive by substituting i with ei.", "const action = \"recive\";", ["s", "e", "i", "Esc"]),
+  documentGoal(p(0, 2), { excludes: ["rener"], includes: ["render(page);"], insertText: "d", range: { from: p(0, 2), to: p(0, 3) }, mode: "NORMAL" }, "Fix rener to render by inserting d after n.", "rener(page);", ["a", "d", "Esc"]),
 ];
 
 export const groups = [
@@ -334,8 +334,8 @@ export const groups = [
   ]],
   ["Insert Like a Pro", [
     lesson("Insert at Line Ends", ["I", "A", "Esc"], { sample: editSample, goals: lineInsertGoals, demo: ["I", text("let "), "Esc", "A", text(" // active"), "Esc"] }),
-    lesson("Opening New Lines", ["o", "O", "Esc"], { sample: openSample, goals: openGoals, demo: ["o", text("  teal"), "Esc", "O", text("  cyan"), "Esc"] }),
-    lesson("Making Small Edits", ["s", "x", "r"], { sample: editSample, goals: smallEditGoals, demo: ["s", text("user"), "Esc", "x", "rR"] }),
+    lesson("Opening New Lines", ["o", "O", "Esc"], { sample: openSample, goals: openGoals, demo: ["o", text("  timeout: 30"), "Esc", "O", text("  owner: platform"), "Esc"] }),
+    lesson("Making Small Edits", ["s", "x", "r"], { sample: smallEditGoals[0].sample, goals: smallEditGoals, demo: ["x", "a", text("n"), "Esc"] }),
   ]],
   ["Essential Motions", [
     lesson("Moving by WORDs", ["W", "E", "B"], { sample: wordSample, goals: wordGoals(), demo: ["W", "W", "E", "B"] }),
@@ -873,15 +873,7 @@ function mount() {
     const from = pointFor(cm.getCursor());
     const to = pointFor(insertionPoint(goal) || goal.range?.to || goal.at || goal.start);
     if (!from || !to) return;
-    const label = guideLabel(goal);
     addSvg("line", { x1: from.x, y1: from.y, x2: to.x, y2: to.y });
-    const svgBox = visualGuide.getBoundingClientRect();
-    const width = Math.min(svgBox.width - 20, Math.max(36, label.length * 13 + 18));
-    const boxX = Math.min(to.x + 8, svgBox.width - width - 10);
-    const boxY = Math.max(10, to.y - 28);
-    addSvg("rect", { x: boxX, y: boxY, width, height: 30 });
-    const textNode = addSvg("text", { x: boxX + 9, y: boxY + 21 });
-    textNode.textContent = label;
   }
 
   function pointFor(pos) {
@@ -901,20 +893,16 @@ function mount() {
     return node;
   }
 
-  function guideLabel(goal) {
-    if (goal.insertText) return `type ${visibleText(goal.insertText)} ${placementText(goal) || "replacing highlight"}`;
-    if (goal.type === "mode") return goal.mode;
-    if (goal.type === "document") return goal.excludes?.length ? "remove" : "edit";
-    return "target";
-  }
-
   function objectiveText(goal) {
     if (goal.type === "cursor") return "Objective: move your cursor onto the green target.";
     if (goal.type === "mode" && goal.mode === "INSERT") return "Objective: enter INSERT mode at the cursor. Do not type text for this goal.";
     if (goal.type === "mode" && goal.mode === "NORMAL") return "Objective: leave insert or visual mode and return to NORMAL mode.";
     if (goal.type === "mode") return `Objective: switch Vim to ${goal.mode} mode.`;
-    if (goal.insertText) return `Objective: type ${visibleText(goal.insertText)} ${placementText(goal) || "replacing the highlighted text"}, then press Esc.`;
-    if (goal.excludes?.length) return `Objective: remove "${goal.excludes[0]}" from the editor.`;
+    if (goal.insertText) {
+      const task = goal.hint ? `${goal.hint} ` : "";
+      return `Objective: ${task}Type ${visibleText(goal.insertText)} ${placementText(goal) || "for this fix"}, then press Esc.`;
+    }
+    if (goal.excludes?.length) return `Objective: ${goal.hint || `remove "${goal.excludes[0]}" from the editor.`}`;
     return goal.hint ? `Objective: ${goal.hint}` : "Objective: edit the highlighted text.";
   }
 

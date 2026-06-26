@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { checkGoal, createRun, currentGoal, demoSteps, demoTokens, insertionPoint, lessons, normalizeVimKey, placementText, recordKey, runStats, toVimKey, visibleText } from "./src/app.js";
 
 globalThis.localStorage = {
@@ -41,5 +42,9 @@ assert.equal(placementText(insertLesson.goals[0]), "before \"guest\"");
 assert.equal(placementText(lessons[lessonIndex("Making Small Edits")].goals[0]), "");
 assert.equal(visibleText("  teal"), "[space][space]teal");
 assert.equal(visibleText("new "), "new[space]");
+
+const scenarioHtml = readFileSync(new URL("./specs/scenarios.html", import.meta.url), "utf8");
+assert.equal((scenarioHtml.match(/<td>\d+<\/td>/g) || []).length, lessons.reduce((total, lesson) => total + lesson.goals.length, 0));
+for (const lesson of lessons) assert.ok(scenarioHtml.includes(`<summary><span>${lesson.title}</span><span class="count">${lesson.goals.length} challenges</span></summary>`));
 
 console.log("ok");
